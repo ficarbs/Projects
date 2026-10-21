@@ -25,10 +25,12 @@ function setupNpcs(){
      await say(['SPRIGMON|HEY! THAT ROCK GUARD STOLE MY SUNLEAF!','SPRIGMON|BEAT HIM, TAMER, AND I\'LL FOLLOW YOU ANYWHERE!','ROCK GUARD|GRRRMMMM... (THE GUARD LUMBERS TOWARD YOU.)']);
      const r=await battle([mkFoe('guard')],{bg:'forest',mus:'boss',boss:1,intro:'THE ROCK GUARD BLOCKS THE WAY!'});
      if(r=='lose'){await gameOver();return}
-     await say('SPRIGMON|WOOHOO! YOU\'RE STRONG! I\'M COMING WITH YOU!');G.party.push(mkMember('sprigmon',lvNew()));G.flags.sprig=1;n.hide=true;
+     await say('SPRIGMON|WOOHOO! YOU\'RE STRONG! I\'M COMING WITH YOU!');G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});sfx('heal');await say('SPRIGMON|HERE - MY SUNLEAF\'S LIGHT! (YOUR TEAM IS FULLY RESTORED.)');G.party.push(mkMember('sprigmon',lvNew()));G.flags.sprig=1;n.hide=true;
      const g=forest.npcs.find(x=>x.k=='guard');if(g)g.hide=true;sfx('level');await say('SPRIGMON JOINED YOUR TEAM!');await postBattle()}},
    {x:24,y:20,c:'rockmon',flag:'sprig',flip:true,k:'guard',dir:0,talk:async()=>say('ROCK GUARD|GRRRMMM...')}];
-  cave.npcs=[{x:30,y:6,c:'wraith',flag:'crest',aura:1,dir:0,mark:true,talk:async n=>{
+  const well=async()=>{await say('A DATA WELL HUMS SOFTLY. ITS LIGHT MENDS YOUR TEAM.');sfx('heal');G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});save()};
+  cave.npcs=[{x:3,y:25,c:'crest',dir:0,aura:1,talk:well},{x:20,y:5,c:'crest',dir:0,aura:1,mark:true,talk:async()=>{await say('A DATA WELL HUMS SOFTLY. ITS LIGHT MENDS YOUR TEAM.');sfx('heal');G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});save()}},
+   {x:30,y:6,c:'wraith',flag:'crest',aura:1,dir:0,mark:true,talk:async n=>{
     await say(['GLITCHWRAITH|...TAMER. YOUR SCENT... IT\'S FAMILIAR. LIKE THE OLD DAYS.','GLITCHWRAITH|I GUARD THE DAWN CREST FOR MY LORD. NO ONE TAKES IT.','EMBERMON|WE\'RE TAKING IT! KAI, READY?']);
     const f=mkFoe('wraith');f.half=async e=>{B.aura=1;flash('#ff62b8',10);B.shake=6;await banner('THE WRAITH SHRIEKS! STATIC TEARS THE AIR!',50);e.u.atk+=8;e.u.spd+=3;};
     const r=await battle([f],{bg:'cave',mus:'boss',boss:1,intro:'THE GLITCHWRAITH RISES FROM THE STATIC!'});

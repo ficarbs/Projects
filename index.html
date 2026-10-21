@@ -1,3 +1,5 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Digital Dawn</title>
 <style>
 :root{--bg:#05030c;--fg:#dde2ee;--dim:#7880a8;color-scheme:dark}
@@ -5,7 +7,7 @@ html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--fg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding-inline:16px;box-sizing:border-box;font:12px monospace}
 canvas{image-rendering:pixelated;image-rendering:crisp-edges;background:#000;max-width:100%;outline:none}
 p{margin:0;color:var(--dim);text-align:center}
-</style>
+</style></head><body>
 <canvas id="c" width="256" height="224" tabindex="0"></canvas>
 <p>Click the game, then: arrows/WASD move, Z or Enter confirm, X menu, M mute</p>
 <script>
@@ -411,7 +413,8 @@ addEventListener('resize',fit);fit();
 function box(x,y,w,h){R(x+1,y,w-2,h,'#f4f4ff');R(x,y+1,w,h-2,'#f4f4ff');R(x+2,y+2,w-4,h-4,'#4a5ae0');R(x+3,y+3,w-6,h-6,'#141e78');R(x+3,y+3,w-6,(h-6)/2|0,'#1c2a94');R(x+3,y+3,w-6,1,'#3a4ad0')}
 function wrap(t,n){const out=[];let cur='';for(const w of t.split(' ')){if((cur+' '+w).trim().length>n){out.push(cur);cur=w}else cur=(cur+' '+w).trim()}if(cur)out.push(cur);return out}
 const dlg={cur:null};
-async function say(lines,who){if(!Array.isArray(lines))lines=[lines];
+async function say(lines,who){busy++;try{await sayInner(lines,who)}finally{busy--;keyq.length=0}}
+async function sayInner(lines,who){if(!Array.isArray(lines))lines=[lines];
   for(let line of lines){let name=who||'',txt=line;const m=/^([A-Z0-9' ]{2,16})\|(.*)$/.exec(line);if(m){name=m[1];txt=m[2]}
     const L=wrap(txt,37);for(let p=0;p<L.length;p+=3){const page=L.slice(p,p+3),full=page.join('\n');
       const d=dlg.cur={name,page,n:0,len:full.length,more:p+3<L.length};keyq.length=0;
@@ -422,7 +425,8 @@ function drawDlg(){const d=dlg.cur;if(!d)return;box(6,150,244,68);
   if(d.name){box(12,141,tw(d.name)+16,16);tx(d.name,20,145,'#ffd83c')}
   let left=Math.floor(d.n);for(let i=0;i<d.page.length;i++){const s=d.page[i].slice(0,Math.max(0,left));left-=d.page[i].length;tx(s,14,163+i*14);}
   if(d.n>=d.len&&(T>>4)%2==0)R(236,208,6,3,'#fff'),R(237,211,4,1,'#fff'),R(238,212,2,1,'#fff')}
-async function menu(items,x,y,o={}){let c=o.c||0;const it=items.map(i=>typeof i=='string'?{t:i}:i);
+async function menu(items,x,y,o={}){busy++;try{return await menuInner(items,x,y,o)}finally{busy--}}
+async function menuInner(items,x,y,o={}){let c=o.c||0;const it=items.map(i=>typeof i=='string'?{t:i}:i);
   const w=o.w||Math.max(...it.map(i=>i.t.length))*6+24,h=it.length*12+10;
   const u={draw(){box(x,y,w,h);it.forEach((s,i)=>tx(s.t,x+15,y+6+i*12,s.d?'#7880a8':i==c?'#ffd83c':'#fff'));
     if((T>>3)%4<3)tx('>',x+5+((T>>4)%2),y+6+c*12,'#ffd83c')}};uis.push(u);keyq.length=0;let res;
@@ -436,13 +440,13 @@ function bar(x,y,w,h,v,m,c1,c2){R(x,y,w,h,'#10081c');R(x+1,y+1,w-2,h-2,'#3a3050'
 const SP={
  embermon:{n:'EMBERMON',el:'fire',hp:34,mp:10,atk:7,def:4,spd:6,g:{hp:8,mp:2,atk:2.2,def:1.4,spd:1},moves:[[1,'claw'],[2,'sparkflame'],[5,'emberburst']]},
  blazewyrm:{n:'BLAZEWYRM',el:'fire',hp:60,mp:26,atk:16,def:10,spd:9,g:{hp:9,mp:2.5,atk:2.6,def:1.6,spd:1.1},moves:[[1,'flameslash'],[1,'dragonclaw'],[1,'inferno']]},
- aquabit:{n:'AQUABIT',el:'water',hp:38,mp:14,atk:6,def:6,spd:5,g:{hp:7.5,mp:3,atk:1.8,def:1.6,spd:1},moves:[[1,'bubble'],[1,'aquamist'],[6,'tidal']]},
+ aquabit:{n:'AQUABIT',el:'water',hp:38,mp:14,atk:6,def:6,spd:5,g:{hp:7.5,mp:3,atk:1.8,def:1.6,spd:1},moves:[[1,'tailslap'],[1,'bubble'],[1,'aquamist'],[6,'tidal']]},
  sprigmon:{n:'SPRIGMON',el:'plant',hp:32,mp:14,atk:7,def:4,spd:9,g:{hp:6.5,mp:3,atk:2,def:1.3,spd:1.2},moves:[[1,'vine'],[3,'leafblade'],[6,'sprout']]}};
 const MV={
  claw:{n:'CLAW',p:9,mp:0,fx:'claw'},tackle:{n:'TACKLE',p:6,mp:0,fx:'slash'},bite:{n:'BITE',p:8,mp:0,fx:'claw'},
  sparkflame:{n:'SPARK FLAME',p:15,mp:3,el:'fire',fx:'fire'},emberburst:{n:'EMBER BURST',p:12,mp:6,el:'fire',fx:'fire',all:1},
  flameslash:{n:'FLAME SLASH',p:22,mp:0,el:'fire',fx:'slashfire'},dragonclaw:{n:'DRAGON CLAW',p:27,mp:4,fx:'claw'},inferno:{n:'INFERNO BLAST',p:22,mp:9,el:'fire',fx:'fire',all:1},
- bubble:{n:'BUBBLE SHOT',p:13,mp:3,el:'water',fx:'water'},aquamist:{n:'AQUA MIST',p:42,mp:4,heal:1,fx:'heal'},tidal:{n:'TIDAL WAVE',p:14,mp:7,el:'water',fx:'tidal',all:1},
+ tailslap:{n:'TAIL SLAP',p:9,mp:0,fx:'slash'},bubble:{n:'BUBBLE SHOT',p:13,mp:3,el:'water',fx:'water'},aquamist:{n:'AQUA MIST',p:42,mp:4,heal:1,fx:'heal'},tidal:{n:'TIDAL WAVE',p:14,mp:7,el:'water',fx:'tidal',all:1},
  vine:{n:'VINE WHIP',p:11,mp:0,el:'plant',fx:'leaf'},leafblade:{n:'LEAF BLADE',p:18,mp:4,el:'plant',fx:'leaf'},sprout:{n:'SPROUT GLOW',p:34,mp:6,heal:1,all:1,fx:'heal'},
  slime:{n:'SLIME SHOT',p:9,mp:0,el:'plant',fx:'leaf'},zap:{n:'THUNDER ZAP',p:13,mp:0,el:'elec',fx:'bolt'},rock:{n:'ROCK SMASH',p:15,mp:0,fx:'slash'},
  pulse:{n:'NULL PULSE',p:20,mp:0,el:'void',fx:'void'},storm:{n:'NULL STORM',p:16,mp:0,el:'void',fx:'void',all:1},drain:{n:'DATA DRAIN',p:24,mp:0,el:'void',fx:'void'}};
@@ -454,7 +458,7 @@ const ENY={
  sparkfox:{n:'SPARKFOX',spr:'sparkfox',el:'elec',hp:34,atk:11,def:3,spd:10,moves:['zap','bite'],xp:16,bits:10},
  rockmon:{n:'ROCKMON',spr:'rockmon',el:'none',hp:70,atk:15,def:9,spd:3,moves:['rock','tackle'],xp:28,bits:18},
  guard:{n:'ROCK GUARD',spr:'rockmon',el:'none',hp:140,atk:13,def:7,spd:4,moves:['rock','rock','tackle'],xp:70,bits:40},
- wraith:{n:'GLITCHWRAITH',spr:'wraith',el:'void',hp:430,atk:40,def:10,spd:12,moves:['pulse','pulse','storm','drain'],xp:220,bits:150},
+ wraith:{n:'GLITCHWRAITH',spr:'wraith',el:'void',hp:340,atk:32,def:10,spd:12,moves:['pulse','pulse','storm','drain'],xp:220,bits:150},
  sov:{n:'NULL SOVEREIGN',spr:'sovereign',el:'void',hp:620,atk:52,def:14,spd:13,moves:['pulse','storm','drain'],xp:400,bits:0}};
 const ITEMS={potion:{n:'POTION',d:'HP +60',price:20},ether:{n:'ETHER',d:'MP +20',price:30}};
 const S=(m,k)=>{const d=SP[m.sp];return Math.round(d[k]+d.g[k]*m.lv)};
@@ -597,7 +601,7 @@ const imgOf=e=>SPR[e.side?e.u.spr:e.u.sp];
 const cen=e=>{const im=imgOf(e);return[e.x+e.ox,e.y-im.height/2]};
 function mkFoe(k,sc=1,pre=''){const d=ENY[k];return{n:pre+d.n,spr:(pre?'n_':'')+d.spr,el:d.el,hp:Math.round(d.hp*sc),mhp:Math.round(d.hp*sc),atk:Math.round(d.atk*(1+(sc-1)*.6)),def:Math.round(d.def*(1+(sc-1)*.6)),spd:d.spd,moves:d.moves,xp:Math.round(d.xp*sc*.9),bits:Math.round(d.bits*sc)}}
 const ZONES={forest:()=>{const k=pick(['gelbit','gelbit','bitbat','sparkfox']);return mkFoe(k)},
- cave:()=>{const k=pick(['gelbit','bitbat','sparkfox','rockmon','rockmon']);return mkFoe(k,k=='rockmon'?1:1.7)},
+ cave:()=>{const k=pick(['gelbit','bitbat','sparkfox','rockmon']);return mkFoe(k,k=='rockmon'?.85:1.35)},
  tower:()=>{const k=pick(['gelbit','bitbat','sparkfox','rockmon']);return mkFoe(k,k=='rockmon'?1.5:2.6,'NULL ')}};
 async function randomBattle(){const z=curMap().enc;const n=1+(Math.random()<.5?1:0)+(G.party.length>2&&Math.random()<.45?1:0);
   const foes=[];for(let i=0;i<Math.min(3,n);i++)foes.push(ZONES[z]());
@@ -752,6 +756,7 @@ async function battle(foes,o={}){busy++;const prevMus=AU.trackName;music(null);s
       const e=B.ents.find(x=>x.u===m);burst(cen(e)[0],cen(e)[1],30,['#ffd83c','#fff','#9dff9d'],2.6,30,-.04,2);await banner(SP[m.sp].n+' REACHED LV '+m.lv+'!',46);
       const nm=SP[m.sp].moves.find(a=>a[0]==m.lv);if(nm){await banner('LEARNED '+MV[nm[1]].n+'!',46)}}}
     await wait(10)}
+  G.party.forEach(m=>{if(m.hp>0)m.mp=Math.min(mmp(m),m.mp+Math.ceil(mmp(m)*.25))});
   B.msg='';await fade(1,14);scene=o.after||'world';B=null;parts.length=0;fxs.length=0;floats.length=0;
   if(scene=='world'){music(prevMus&&prevMus!='battle'&&prevMus!='boss'&&prevMus!='victory'?prevMus:curMap().mus)}
   G.noenc=8;for(const k in held)held[k]=0;keyq.length=0;await fade(0,14);busy--;return result}
@@ -812,10 +817,12 @@ function setupNpcs(){
      await say(['SPRIGMON|HEY! THAT ROCK GUARD STOLE MY SUNLEAF!','SPRIGMON|BEAT HIM, TAMER, AND I\'LL FOLLOW YOU ANYWHERE!','ROCK GUARD|GRRRMMMM... (THE GUARD LUMBERS TOWARD YOU.)']);
      const r=await battle([mkFoe('guard')],{bg:'forest',mus:'boss',boss:1,intro:'THE ROCK GUARD BLOCKS THE WAY!'});
      if(r=='lose'){await gameOver();return}
-     await say('SPRIGMON|WOOHOO! YOU\'RE STRONG! I\'M COMING WITH YOU!');G.party.push(mkMember('sprigmon',lvNew()));G.flags.sprig=1;n.hide=true;
+     await say('SPRIGMON|WOOHOO! YOU\'RE STRONG! I\'M COMING WITH YOU!');G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});sfx('heal');await say('SPRIGMON|HERE - MY SUNLEAF\'S LIGHT! (YOUR TEAM IS FULLY RESTORED.)');G.party.push(mkMember('sprigmon',lvNew()));G.flags.sprig=1;n.hide=true;
      const g=forest.npcs.find(x=>x.k=='guard');if(g)g.hide=true;sfx('level');await say('SPRIGMON JOINED YOUR TEAM!');await postBattle()}},
    {x:24,y:20,c:'rockmon',flag:'sprig',flip:true,k:'guard',dir:0,talk:async()=>say('ROCK GUARD|GRRRMMM...')}];
-  cave.npcs=[{x:30,y:6,c:'wraith',flag:'crest',aura:1,dir:0,mark:true,talk:async n=>{
+  const well=async()=>{await say('A DATA WELL HUMS SOFTLY. ITS LIGHT MENDS YOUR TEAM.');sfx('heal');G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});save()};
+  cave.npcs=[{x:3,y:25,c:'crest',dir:0,aura:1,talk:well},{x:20,y:5,c:'crest',dir:0,aura:1,mark:true,talk:async()=>{await say('A DATA WELL HUMS SOFTLY. ITS LIGHT MENDS YOUR TEAM.');sfx('heal');G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});save()}},
+   {x:30,y:6,c:'wraith',flag:'crest',aura:1,dir:0,mark:true,talk:async n=>{
     await say(['GLITCHWRAITH|...TAMER. YOUR SCENT... IT\'S FAMILIAR. LIKE THE OLD DAYS.','GLITCHWRAITH|I GUARD THE DAWN CREST FOR MY LORD. NO ONE TAKES IT.','EMBERMON|WE\'RE TAKING IT! KAI, READY?']);
     const f=mkFoe('wraith');f.half=async e=>{B.aura=1;flash('#ff62b8',10);B.shake=6;await banner('THE WRAITH SHRIEKS! STATIC TEARS THE AIR!',50);e.u.atk+=8;e.u.spd+=3;};
     const r=await battle([f],{bg:'cave',mus:'boss',boss:1,intro:'THE GLITCHWRAITH RISES FROM THE STATIC!'});
@@ -947,4 +954,4 @@ boot();
 
 document.getElementById('c').addEventListener('click',()=>{document.getElementById('c').focus();auInit()});
 fit();
-</script>
+</script></body></html>

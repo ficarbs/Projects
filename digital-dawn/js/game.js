@@ -23,7 +23,8 @@ addEventListener('resize',fit);fit();
 function box(x,y,w,h){R(x+1,y,w-2,h,'#f4f4ff');R(x,y+1,w,h-2,'#f4f4ff');R(x+2,y+2,w-4,h-4,'#4a5ae0');R(x+3,y+3,w-6,h-6,'#141e78');R(x+3,y+3,w-6,(h-6)/2|0,'#1c2a94');R(x+3,y+3,w-6,1,'#3a4ad0')}
 function wrap(t,n){const out=[];let cur='';for(const w of t.split(' ')){if((cur+' '+w).trim().length>n){out.push(cur);cur=w}else cur=(cur+' '+w).trim()}if(cur)out.push(cur);return out}
 const dlg={cur:null};
-async function say(lines,who){if(!Array.isArray(lines))lines=[lines];
+async function say(lines,who){busy++;try{await sayInner(lines,who)}finally{busy--;keyq.length=0}}
+async function sayInner(lines,who){if(!Array.isArray(lines))lines=[lines];
   for(let line of lines){let name=who||'',txt=line;const m=/^([A-Z0-9' ]{2,16})\|(.*)$/.exec(line);if(m){name=m[1];txt=m[2]}
     const L=wrap(txt,37);for(let p=0;p<L.length;p+=3){const page=L.slice(p,p+3),full=page.join('\n');
       const d=dlg.cur={name,page,n:0,len:full.length,more:p+3<L.length};keyq.length=0;
@@ -34,7 +35,8 @@ function drawDlg(){const d=dlg.cur;if(!d)return;box(6,150,244,68);
   if(d.name){box(12,141,tw(d.name)+16,16);tx(d.name,20,145,'#ffd83c')}
   let left=Math.floor(d.n);for(let i=0;i<d.page.length;i++){const s=d.page[i].slice(0,Math.max(0,left));left-=d.page[i].length;tx(s,14,163+i*14);}
   if(d.n>=d.len&&(T>>4)%2==0)R(236,208,6,3,'#fff'),R(237,211,4,1,'#fff'),R(238,212,2,1,'#fff')}
-async function menu(items,x,y,o={}){let c=o.c||0;const it=items.map(i=>typeof i=='string'?{t:i}:i);
+async function menu(items,x,y,o={}){busy++;try{return await menuInner(items,x,y,o)}finally{busy--}}
+async function menuInner(items,x,y,o={}){let c=o.c||0;const it=items.map(i=>typeof i=='string'?{t:i}:i);
   const w=o.w||Math.max(...it.map(i=>i.t.length))*6+24,h=it.length*12+10;
   const u={draw(){box(x,y,w,h);it.forEach((s,i)=>tx(s.t,x+15,y+6+i*12,s.d?'#7880a8':i==c?'#ffd83c':'#fff'));
     if((T>>3)%4<3)tx('>',x+5+((T>>4)%2),y+6+c*12,'#ffd83c')}};uis.push(u);keyq.length=0;let res;
@@ -48,13 +50,13 @@ function bar(x,y,w,h,v,m,c1,c2){R(x,y,w,h,'#10081c');R(x+1,y+1,w-2,h-2,'#3a3050'
 const SP={
  embermon:{n:'EMBERMON',el:'fire',hp:34,mp:10,atk:7,def:4,spd:6,g:{hp:8,mp:2,atk:2.2,def:1.4,spd:1},moves:[[1,'claw'],[2,'sparkflame'],[5,'emberburst']]},
  blazewyrm:{n:'BLAZEWYRM',el:'fire',hp:60,mp:26,atk:16,def:10,spd:9,g:{hp:9,mp:2.5,atk:2.6,def:1.6,spd:1.1},moves:[[1,'flameslash'],[1,'dragonclaw'],[1,'inferno']]},
- aquabit:{n:'AQUABIT',el:'water',hp:38,mp:14,atk:6,def:6,spd:5,g:{hp:7.5,mp:3,atk:1.8,def:1.6,spd:1},moves:[[1,'bubble'],[1,'aquamist'],[6,'tidal']]},
+ aquabit:{n:'AQUABIT',el:'water',hp:38,mp:14,atk:6,def:6,spd:5,g:{hp:7.5,mp:3,atk:1.8,def:1.6,spd:1},moves:[[1,'tailslap'],[1,'bubble'],[1,'aquamist'],[6,'tidal']]},
  sprigmon:{n:'SPRIGMON',el:'plant',hp:32,mp:14,atk:7,def:4,spd:9,g:{hp:6.5,mp:3,atk:2,def:1.3,spd:1.2},moves:[[1,'vine'],[3,'leafblade'],[6,'sprout']]}};
 const MV={
  claw:{n:'CLAW',p:9,mp:0,fx:'claw'},tackle:{n:'TACKLE',p:6,mp:0,fx:'slash'},bite:{n:'BITE',p:8,mp:0,fx:'claw'},
  sparkflame:{n:'SPARK FLAME',p:15,mp:3,el:'fire',fx:'fire'},emberburst:{n:'EMBER BURST',p:12,mp:6,el:'fire',fx:'fire',all:1},
  flameslash:{n:'FLAME SLASH',p:22,mp:0,el:'fire',fx:'slashfire'},dragonclaw:{n:'DRAGON CLAW',p:27,mp:4,fx:'claw'},inferno:{n:'INFERNO BLAST',p:22,mp:9,el:'fire',fx:'fire',all:1},
- bubble:{n:'BUBBLE SHOT',p:13,mp:3,el:'water',fx:'water'},aquamist:{n:'AQUA MIST',p:42,mp:4,heal:1,fx:'heal'},tidal:{n:'TIDAL WAVE',p:14,mp:7,el:'water',fx:'tidal',all:1},
+ tailslap:{n:'TAIL SLAP',p:9,mp:0,fx:'slash'},bubble:{n:'BUBBLE SHOT',p:13,mp:3,el:'water',fx:'water'},aquamist:{n:'AQUA MIST',p:42,mp:4,heal:1,fx:'heal'},tidal:{n:'TIDAL WAVE',p:14,mp:7,el:'water',fx:'tidal',all:1},
  vine:{n:'VINE WHIP',p:11,mp:0,el:'plant',fx:'leaf'},leafblade:{n:'LEAF BLADE',p:18,mp:4,el:'plant',fx:'leaf'},sprout:{n:'SPROUT GLOW',p:34,mp:6,heal:1,all:1,fx:'heal'},
  slime:{n:'SLIME SHOT',p:9,mp:0,el:'plant',fx:'leaf'},zap:{n:'THUNDER ZAP',p:13,mp:0,el:'elec',fx:'bolt'},rock:{n:'ROCK SMASH',p:15,mp:0,fx:'slash'},
  pulse:{n:'NULL PULSE',p:20,mp:0,el:'void',fx:'void'},storm:{n:'NULL STORM',p:16,mp:0,el:'void',fx:'void',all:1},drain:{n:'DATA DRAIN',p:24,mp:0,el:'void',fx:'void'}};
@@ -66,7 +68,7 @@ const ENY={
  sparkfox:{n:'SPARKFOX',spr:'sparkfox',el:'elec',hp:34,atk:11,def:3,spd:10,moves:['zap','bite'],xp:16,bits:10},
  rockmon:{n:'ROCKMON',spr:'rockmon',el:'none',hp:70,atk:15,def:9,spd:3,moves:['rock','tackle'],xp:28,bits:18},
  guard:{n:'ROCK GUARD',spr:'rockmon',el:'none',hp:140,atk:13,def:7,spd:4,moves:['rock','rock','tackle'],xp:70,bits:40},
- wraith:{n:'GLITCHWRAITH',spr:'wraith',el:'void',hp:430,atk:40,def:10,spd:12,moves:['pulse','pulse','storm','drain'],xp:220,bits:150},
+ wraith:{n:'GLITCHWRAITH',spr:'wraith',el:'void',hp:340,atk:32,def:10,spd:12,moves:['pulse','pulse','storm','drain'],xp:220,bits:150},
  sov:{n:'NULL SOVEREIGN',spr:'sovereign',el:'void',hp:620,atk:52,def:14,spd:13,moves:['pulse','storm','drain'],xp:400,bits:0}};
 const ITEMS={potion:{n:'POTION',d:'HP +60',price:20},ether:{n:'ETHER',d:'MP +20',price:30}};
 const S=(m,k)=>{const d=SP[m.sp];return Math.round(d[k]+d.g[k]*m.lv)};

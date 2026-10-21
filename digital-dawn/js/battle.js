@@ -12,7 +12,7 @@ const imgOf=e=>SPR[e.side?e.u.spr:e.u.sp];
 const cen=e=>{const im=imgOf(e);return[e.x+e.ox,e.y-im.height/2]};
 function mkFoe(k,sc=1,pre=''){const d=ENY[k];return{n:pre+d.n,spr:(pre?'n_':'')+d.spr,el:d.el,hp:Math.round(d.hp*sc),mhp:Math.round(d.hp*sc),atk:Math.round(d.atk*(1+(sc-1)*.6)),def:Math.round(d.def*(1+(sc-1)*.6)),spd:d.spd,moves:d.moves,xp:Math.round(d.xp*sc*.9),bits:Math.round(d.bits*sc)}}
 const ZONES={forest:()=>{const k=pick(['gelbit','gelbit','bitbat','sparkfox']);return mkFoe(k)},
- cave:()=>{const k=pick(['gelbit','bitbat','sparkfox','rockmon','rockmon']);return mkFoe(k,k=='rockmon'?1:1.7)},
+ cave:()=>{const k=pick(['gelbit','bitbat','sparkfox','rockmon']);return mkFoe(k,k=='rockmon'?.85:1.35)},
  tower:()=>{const k=pick(['gelbit','bitbat','sparkfox','rockmon']);return mkFoe(k,k=='rockmon'?1.5:2.6,'NULL ')}};
 async function randomBattle(){const z=curMap().enc;const n=1+(Math.random()<.5?1:0)+(G.party.length>2&&Math.random()<.45?1:0);
   const foes=[];for(let i=0;i<Math.min(3,n);i++)foes.push(ZONES[z]());
@@ -167,6 +167,7 @@ async function battle(foes,o={}){busy++;const prevMus=AU.trackName;music(null);s
       const e=B.ents.find(x=>x.u===m);burst(cen(e)[0],cen(e)[1],30,['#ffd83c','#fff','#9dff9d'],2.6,30,-.04,2);await banner(SP[m.sp].n+' REACHED LV '+m.lv+'!',46);
       const nm=SP[m.sp].moves.find(a=>a[0]==m.lv);if(nm){await banner('LEARNED '+MV[nm[1]].n+'!',46)}}}
     await wait(10)}
+  G.party.forEach(m=>{if(m.hp>0)m.mp=Math.min(mmp(m),m.mp+Math.ceil(mmp(m)*.25))});
   B.msg='';await fade(1,14);scene=o.after||'world';B=null;parts.length=0;fxs.length=0;floats.length=0;
   if(scene=='world'){music(prevMus&&prevMus!='battle'&&prevMus!='boss'&&prevMus!='victory'?prevMus:curMap().mus)}
   G.noenc=8;for(const k in held)held[k]=0;keyq.length=0;await fade(0,14);busy--;return result}
