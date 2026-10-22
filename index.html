@@ -1,3 +1,5 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Digital Dawn</title>
 <style>
 :root{--bg:#05030c;--fg:#dde2ee;--dim:#7880a8;color-scheme:dark}
@@ -5,7 +7,7 @@ html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--fg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding-inline:16px;box-sizing:border-box;font:12px monospace}
 canvas{image-rendering:pixelated;image-rendering:crisp-edges;background:#000;max-width:100%;outline:none}
 p{margin:0;color:var(--dim);text-align:center}
-</style>
+</style></head><body>
 <canvas id="c" width="256" height="224" tabindex="0"></canvas>
 <p>Click the game, then: arrows/WASD move, Z or Enter confirm, X menu, M mute</p>
 <script>
@@ -206,6 +208,54 @@ const SOV=[
 ".zzzzaazzzzzmmmzzz",".zzzzzzzzzzzzzmmmz",".zzzzzzzzzaazzzzzz","zzzzzzzzzzaazzzzzz","zzzzzzzzzzzzzzzzzz","zzzzzzzzzzzzmmzzzz",
 "zzzzzzzzzzzzmmzzzz","zzzzzzzzzzzzzzzzzz"];
 const NULLB=["......zzzz","....zzzzzz","...zzzzzzz","..zzzzzzzz","..zzzzmmmz","..zzzzmwmz","..zzzzmmmz","..zzzzzzzz","..zzzzzzzz","...zzzzzzz","...zzzzzzz","....aazzzz","....aa..zz"];
+const MARINO=[
+".............cc..........",
+"............cccc.........",
+"..........bbbbbbbb.......",
+".........bbbbbbbbbb......",
+".........bbbbbbKwbbb.....",
+"........bbbbbbbbKKbbbbb..",
+"........bbbbbbbbbbbbbbbb.",
+"........bbbbKKKKKKKbbbb..",
+".........bbbbbwwwwbbbb...",
+"...c.....bbbbbbbbbbb.....",
+"..ccc...bbbbbbbbbbbbb....",
+"..cbbbbbbbbbbwwwwwbbbb...",
+".bbbbbbbbbbbwwwwwwwbbbc..",
+"bbbbbbbbbbbbwwwwwwwbbbcc.",
+"bbbbbbbbbbbbbwwwwwbbbbc..",
+".bbbbbbbbbbbbbbbbbbbbb...",
+"..bbbbbbbbbbbbbbbbbbb....",
+"...bbbbbbb...bbbbbbbb....",
+"...ccccccc...ccccccccc..."];
+const VERDANT=[
+"........G.....G..........",
+".......GGG...GGG.........",
+"......GgggggggggG........",
+".....mGgggggggggGG.......",
+".....GggggggKwggggg......",
+"....GGgggggggKKggggggg...",
+"....Gggggggggggggggggg...",
+".....GgggKKKKKKggggggw...",
+"......GggggwwgggggggG....",
+".G.....gggggggggggg......",
+"GGG...ggggggggggggggg....",
+".GGgggggggggggyyyggggG...",
+"..Gggggggggggyyyyyggggg..",
+"...gggggggggggyyyyyggggw.",
+"...ggggggggggggyyyggggg..",
+"....gggggggggggggggggg...",
+".....ggggggg...gggggggg..",
+".....gggggg.....ggggggg..",
+"....nnnnnn.....nnnnnnn..."];
+// hand-drawn overworld follower sprites (facing right)
+const MINI={
+embermon:["......oooo....",".....oooooo...",".....oooKwoo..",".....oooooooo.","......oKKKoo..","..r...ooooo...",".ryooooyyooo..","..ooooyyyooow.","...oooyyyooo..","....ooooooo...","....oo...oo...","....ww...ww..."],
+blazewyrm:[".........r..r...","........rooorr..",".......oooooo...",".......oooKwoo..",".......oooooooo.","........oKKKooo.",".rr.....ooooo...","ryyr..ooooooo...",".ryooooyyyoooow.","...ooooyyyooow..","....oooyyyooo...",".....ooooooo....",".....ooo.ooo....",".....www.www...."],
+aquabit:[".....bbbb.....","....bbbbbb....","....bbbKwbb...","....bbbbbbbb..",".b..bKKKbbb...","bbbbbbbbbb....","bbbbbbwwwbb...",".bbbbbwwwbb...","..bbbbbbbb....","..cc...ccc...."],
+marinomon:["........cc.....",".......cccc....","......bbbbbb...","......bbbKwbb..",".....bbbbbbbbbb",".....bbKKKKbbb.","..c..bbbbbbbb..",".cbbbbbbwwwbb..","bbbbbbbwwwwbbc.","bbbbbbbbwwwbbc.",".bbbbbbbbbbbb..","..ccccc..cccc.."],
+sprigmon:[".....gg.......","....GGGGg.g...","....oooooo....","...oooKwooo...","...oooooooo...","....oKKKoo....",".....gggg.....","....gggggg.g..","....gggggggg..","....ggg.ggg...","....nnn.nnn..."],
+verdantmon:["......G...G....",".....GGG.GGG...","....mGgggggG...","....GggggKwgg..","...GGgggggKKggg","....GggKKKgggg.","..G..ggggggg...",".GGgggggyyyggg.","..ggggggyyygggw","...gggggggggg..","...ggg....ggg..","...nnn....nnn.."]};
 const HUM={
  f:["...HHHHHH...","..HHHHHHHH..","..QQQQQQQQ..","..HSSSSSSH..","..HSKSSKSH..","...SSSSSS...","..CCCCCCCC..",".CCCCCCCCCC.",".SCCCCCCCCS.",".SCCCCCCCCS.","..CCCCCCCC..","..PPPPPPPP..","..PPP..PPP..","..PPP..PPP..","..nnn..nnn.."],
  b:["...HHHHHH...".slice(0,12),"..HHHHHHHH..","..QQQQQQQQ..","..HHHHHHHH..","..HHHHHHHH..","...HHHHHH...","..CCCCCCCC..",".CCCCCCCCCC.",".SCCCCCCCCS.",".SCCCCCCCCS.","..CCCCCCCC..","..PPPPPPPP..","..PPP..PPP..","..PPP..PPP..","..nnn..nnn.."],
@@ -224,7 +274,7 @@ const SPR={};
 function buildSprites(){
   SPR.embermon=spr(EMBER);SPR.blazewyrm=spr(BLAZE);SPR.aquabit=spr(AQUA);SPR.sprigmon=spr(SPRIG);
   SPR.gelbit=spr(GELBIT,{sym:1});SPR.bitbat=spr(BITBAT,{sym:1});SPR.rockmon=spr(ROCK,{sym:1});
-  SPR.sparkfox=spr(FOX);SPR.nullbit=spr(NULLB,{sym:1});SPR.wraith=spr(WRAITH,{sym:1});SPR.sovereign=spr(SOV,{sym:1});
+  SPR.sparkfox=spr(FOX);SPR.marinomon=spr(MARINO);SPR.verdantmon=spr(VERDANT);for(const k in MINI)SPR['mini_'+k]=spr(MINI[k]);SPR.nullbit=spr(NULLB,{sym:1});SPR.wraith=spr(WRAITH,{sym:1});SPR.sovereign=spr(SOV,{sym:1});
   // corrupted variants (tower)
   for(const k of ['gelbit','bitbat','rockmon','sparkfox'])SPR['n_'+k]=mk(SPR[k].width,SPR[k].height,g=>{g.drawImage(SPR[k],0,0);
     g.globalCompositeOperation='source-atop';P(g,'#b020c070',0,0,SPR[k].width,SPR[k].height);
@@ -411,7 +461,8 @@ addEventListener('resize',fit);fit();
 function box(x,y,w,h){R(x+1,y,w-2,h,'#f4f4ff');R(x,y+1,w,h-2,'#f4f4ff');R(x+2,y+2,w-4,h-4,'#4a5ae0');R(x+3,y+3,w-6,h-6,'#141e78');R(x+3,y+3,w-6,(h-6)/2|0,'#1c2a94');R(x+3,y+3,w-6,1,'#3a4ad0')}
 function wrap(t,n){const out=[];let cur='';for(const w of t.split(' ')){if((cur+' '+w).trim().length>n){out.push(cur);cur=w}else cur=(cur+' '+w).trim()}if(cur)out.push(cur);return out}
 const dlg={cur:null};
-async function say(lines,who){if(!Array.isArray(lines))lines=[lines];
+async function say(lines,who){busy++;try{await sayInner(lines,who)}finally{busy--;keyq.length=0}}
+async function sayInner(lines,who){if(!Array.isArray(lines))lines=[lines];
   for(let line of lines){let name=who||'',txt=line;const m=/^([A-Z0-9' ]{2,16})\|(.*)$/.exec(line);if(m){name=m[1];txt=m[2]}
     const L=wrap(txt,37);for(let p=0;p<L.length;p+=3){const page=L.slice(p,p+3),full=page.join('\n');
       const d=dlg.cur={name,page,n:0,len:full.length,more:p+3<L.length};keyq.length=0;
@@ -422,7 +473,8 @@ function drawDlg(){const d=dlg.cur;if(!d)return;box(6,150,244,68);
   if(d.name){box(12,141,tw(d.name)+16,16);tx(d.name,20,145,'#ffd83c')}
   let left=Math.floor(d.n);for(let i=0;i<d.page.length;i++){const s=d.page[i].slice(0,Math.max(0,left));left-=d.page[i].length;tx(s,14,163+i*14);}
   if(d.n>=d.len&&(T>>4)%2==0)R(236,208,6,3,'#fff'),R(237,211,4,1,'#fff'),R(238,212,2,1,'#fff')}
-async function menu(items,x,y,o={}){let c=o.c||0;const it=items.map(i=>typeof i=='string'?{t:i}:i);
+async function menu(items,x,y,o={}){busy++;try{return await menuInner(items,x,y,o)}finally{busy--}}
+async function menuInner(items,x,y,o={}){let c=o.c||0;const it=items.map(i=>typeof i=='string'?{t:i}:i);
   const w=o.w||Math.max(...it.map(i=>i.t.length))*6+24,h=it.length*12+10;
   const u={draw(){box(x,y,w,h);it.forEach((s,i)=>tx(s.t,x+15,y+6+i*12,s.d?'#7880a8':i==c?'#ffd83c':'#fff'));
     if((T>>3)%4<3)tx('>',x+5+((T>>4)%2),y+6+c*12,'#ffd83c')}};uis.push(u);keyq.length=0;let res;
@@ -436,14 +488,17 @@ function bar(x,y,w,h,v,m,c1,c2){R(x,y,w,h,'#10081c');R(x+1,y+1,w-2,h-2,'#3a3050'
 const SP={
  embermon:{n:'EMBERMON',el:'fire',hp:34,mp:10,atk:7,def:4,spd:6,g:{hp:8,mp:2,atk:2.2,def:1.4,spd:1},moves:[[1,'claw'],[2,'sparkflame'],[5,'emberburst']]},
  blazewyrm:{n:'BLAZEWYRM',el:'fire',hp:60,mp:26,atk:16,def:10,spd:9,g:{hp:9,mp:2.5,atk:2.6,def:1.6,spd:1.1},moves:[[1,'flameslash'],[1,'dragonclaw'],[1,'inferno']]},
- aquabit:{n:'AQUABIT',el:'water',hp:38,mp:14,atk:6,def:6,spd:5,g:{hp:7.5,mp:3,atk:1.8,def:1.6,spd:1},moves:[[1,'bubble'],[1,'aquamist'],[6,'tidal']]},
+ aquabit:{n:'AQUABIT',el:'water',hp:38,mp:14,atk:6,def:6,spd:5,g:{hp:7.5,mp:3,atk:1.8,def:1.6,spd:1},moves:[[1,'tailslap'],[1,'bubble'],[1,'aquamist'],[6,'tidal']]},
+ marinomon:{n:'MARINOMON',el:'water',hp:58,mp:30,atk:12,def:12,spd:8,g:{hp:8.5,mp:3.2,atk:2.2,def:2,spd:1.1},moves:[[1,'riptide'],[1,'aquamist'],[1,'tidal'],[1,'hydro']]},
+ verdantmon:{n:'VERDANTMON',el:'plant',hp:52,mp:28,atk:14,def:9,spd:13,g:{hp:7.5,mp:3,atk:2.5,def:1.5,spd:1.4},moves:[[1,'thornclaw'],[1,'leafblade'],[1,'sprout'],[1,'bloom']]},
  sprigmon:{n:'SPRIGMON',el:'plant',hp:32,mp:14,atk:7,def:4,spd:9,g:{hp:6.5,mp:3,atk:2,def:1.3,spd:1.2},moves:[[1,'vine'],[3,'leafblade'],[6,'sprout']]}};
 const MV={
  claw:{n:'CLAW',p:9,mp:0,fx:'claw'},tackle:{n:'TACKLE',p:6,mp:0,fx:'slash'},bite:{n:'BITE',p:8,mp:0,fx:'claw'},
  sparkflame:{n:'SPARK FLAME',p:15,mp:3,el:'fire',fx:'fire'},emberburst:{n:'EMBER BURST',p:12,mp:6,el:'fire',fx:'fire',all:1},
  flameslash:{n:'FLAME SLASH',p:22,mp:0,el:'fire',fx:'slashfire'},dragonclaw:{n:'DRAGON CLAW',p:27,mp:4,fx:'claw'},inferno:{n:'INFERNO BLAST',p:22,mp:9,el:'fire',fx:'fire',all:1},
- bubble:{n:'BUBBLE SHOT',p:13,mp:3,el:'water',fx:'water'},aquamist:{n:'AQUA MIST',p:42,mp:4,heal:1,fx:'heal'},tidal:{n:'TIDAL WAVE',p:14,mp:7,el:'water',fx:'tidal',all:1},
+ tailslap:{n:'TAIL SLAP',p:9,mp:0,fx:'slash'},bubble:{n:'BUBBLE SHOT',p:13,mp:3,el:'water',fx:'water'},aquamist:{n:'AQUA MIST',p:42,mp:4,heal:1,fx:'heal'},tidal:{n:'TIDAL WAVE',p:14,mp:7,el:'water',fx:'tidal',all:1},
  vine:{n:'VINE WHIP',p:11,mp:0,el:'plant',fx:'leaf'},leafblade:{n:'LEAF BLADE',p:18,mp:4,el:'plant',fx:'leaf'},sprout:{n:'SPROUT GLOW',p:34,mp:6,heal:1,all:1,fx:'heal'},
+ riptide:{n:'RIPTIDE',p:18,mp:0,el:'water',fx:'water'},hydro:{n:'HYDRO CANNON',p:32,mp:6,el:'water',fx:'water'},thornclaw:{n:'THORN CLAW',p:19,mp:0,el:'plant',fx:'claw'},bloom:{n:'BLOOM STORM',p:20,mp:8,el:'plant',fx:'leaf',all:1},
  slime:{n:'SLIME SHOT',p:9,mp:0,el:'plant',fx:'leaf'},zap:{n:'THUNDER ZAP',p:13,mp:0,el:'elec',fx:'bolt'},rock:{n:'ROCK SMASH',p:15,mp:0,fx:'slash'},
  pulse:{n:'NULL PULSE',p:20,mp:0,el:'void',fx:'void'},storm:{n:'NULL STORM',p:16,mp:0,el:'void',fx:'void',all:1},drain:{n:'DATA DRAIN',p:24,mp:0,el:'void',fx:'void'}};
 const EM={fire:{plant:1.5,water:.6,fire:.75},water:{fire:1.5,elec:.6,plant:.6},plant:{water:1.5,fire:.6},elec:{water:1.5,plant:.6}};
@@ -454,8 +509,8 @@ const ENY={
  sparkfox:{n:'SPARKFOX',spr:'sparkfox',el:'elec',hp:34,atk:11,def:3,spd:10,moves:['zap','bite'],xp:16,bits:10},
  rockmon:{n:'ROCKMON',spr:'rockmon',el:'none',hp:70,atk:15,def:9,spd:3,moves:['rock','tackle'],xp:28,bits:18},
  guard:{n:'ROCK GUARD',spr:'rockmon',el:'none',hp:140,atk:13,def:7,spd:4,moves:['rock','rock','tackle'],xp:70,bits:40},
- wraith:{n:'GLITCHWRAITH',spr:'wraith',el:'void',hp:430,atk:40,def:10,spd:12,moves:['pulse','pulse','storm','drain'],xp:220,bits:150},
- sov:{n:'NULL SOVEREIGN',spr:'sovereign',el:'void',hp:620,atk:52,def:14,spd:13,moves:['pulse','storm','drain'],xp:400,bits:0}};
+ wraith:{n:'GLITCHWRAITH',spr:'wraith',el:'void',hp:340,atk:32,def:10,spd:12,moves:['pulse','pulse','storm','drain'],xp:220,bits:150},
+ sov:{n:'NULL SOVEREIGN',spr:'sovereign',el:'void',hp:820,atk:58,def:14,spd:13,moves:['pulse','storm','drain'],xp:400,bits:0}};
 const ITEMS={potion:{n:'POTION',d:'HP +60',price:20},ether:{n:'ETHER',d:'MP +20',price:30}};
 const S=(m,k)=>{const d=SP[m.sp];return Math.round(d[k]+d.g[k]*m.lv)};
 const mhp=m=>S(m,'hp'),mmp=m=>S(m,'mp'),need=m=>m.lv*10+m.lv*m.lv*2;
@@ -550,9 +605,9 @@ function drawNpc(n){const[cx,by]=npcScreen(n);
 const walkF=()=>pl.mv>8?1:pl.mv>0?2:0;
 function drawPlayer(){const px=G.x*16+8-DV[G.dir][0]*pl.mv-cam.x,py=G.y*16+16-DV[G.dir][1]*pl.mv-cam.y;
   const dk=G.dir==0?'f':G.dir==1?'l':G.dir==2?'r':'b';shadow(px,py,10);drawChar(SPR.hero[dk][walkF()],px,py-(pl.mv&&pl.mv%8<4?1:0))}
-function drawFollower(){const p=G.party[0];if(!p||!p.hp)return;const img=SPR[p.sp];const sc=.5;const t=pl.mv?1-pl.mv/16:1;
+function drawFollower(){const p=G.party[0];if(!p||!p.hp)return;const img=SPR['mini_'+p.sp]||SPR[p.sp];const t=pl.mv?1-pl.mv/16:1;
   const fx=(pl.fx+(G.x-pl.fx)*0)*16,ox=pl.fox+(pl.fx-pl.fox)*t,oy=pl.foy+(pl.fy-pl.foy)*t;
-  const cx=ox*16+8-cam.x,by=oy*16+16-cam.y;const w=img.width>>1,h=img.height>>1;
+  const cx=ox*16+8-cam.x,by=oy*16+16-cam.y;const w=img.width,h=img.height;
   R(cx-6,by-2,12,2,'#00000050');ctx.save();if(pl.fdir==1){ctx.translate(cx,0);ctx.scale(-1,1);ctx.drawImage(img,-w/2|0,by-h-((T>>4)&1),w,h)}else ctx.drawImage(img,cx-w/2|0,by-h-((T>>4)&1),w,h);ctx.restore()}
 
 async function fade(to,n=14,col='#000'){const from=fade.a||0;for(let i=1;i<=n;i++){fade.a=from+(to-from)*i/n;fade.c=col;await frame()}fade.a=to}
@@ -597,7 +652,7 @@ const imgOf=e=>SPR[e.side?e.u.spr:e.u.sp];
 const cen=e=>{const im=imgOf(e);return[e.x+e.ox,e.y-im.height/2]};
 function mkFoe(k,sc=1,pre=''){const d=ENY[k];return{n:pre+d.n,spr:(pre?'n_':'')+d.spr,el:d.el,hp:Math.round(d.hp*sc),mhp:Math.round(d.hp*sc),atk:Math.round(d.atk*(1+(sc-1)*.6)),def:Math.round(d.def*(1+(sc-1)*.6)),spd:d.spd,moves:d.moves,xp:Math.round(d.xp*sc*.9),bits:Math.round(d.bits*sc)}}
 const ZONES={forest:()=>{const k=pick(['gelbit','gelbit','bitbat','sparkfox']);return mkFoe(k)},
- cave:()=>{const k=pick(['gelbit','bitbat','sparkfox','rockmon','rockmon']);return mkFoe(k,k=='rockmon'?1:1.7)},
+ cave:()=>{const k=pick(['gelbit','bitbat','sparkfox','rockmon']);return mkFoe(k,k=='rockmon'?.85:1.35)},
  tower:()=>{const k=pick(['gelbit','bitbat','sparkfox','rockmon']);return mkFoe(k,k=='rockmon'?1.5:2.6,'NULL ')}};
 async function randomBattle(){const z=curMap().enc;const n=1+(Math.random()<.5?1:0)+(G.party.length>2&&Math.random()<.45?1:0);
   const foes=[];for(let i=0;i<Math.min(3,n);i++)foes.push(ZONES[z]());
@@ -747,22 +802,26 @@ async function battle(foes,o={}){busy++;const prevMus=AU.trackName;music(null);s
     if(!alive(1).length)result='win';else if(!alive(0).length)result='lose'}
   B.msg='';
   if(result=='win'){music('victory');await banner('VICTORY!',40);let xp=0,bits=0;foes.forEach(f=>{xp+=f.xp;bits+=f.bits});G.bits+=bits;
-    await banner('GOT '+xp+' EXP AND '+bits+' BITS!',50);if(Math.random()<.3||o.boss){G.items.potion++;await banner('FOUND A POTION!',34)}
+    await banner('GOT '+xp+' EXP AND '+bits+' BITS!',50);if(Math.random()<.12||o.boss){G.items.potion++;await banner('FOUND A POTION!',34)}
     for(const m of G.party){if(m.hp<=0)continue;m.xp+=xp;while(m.xp>=need(m)){m.xp-=need(m);const oh=mhp(m),om=mmp(m);m.lv++;m.hp+=mhp(m)-oh;m.mp+=mmp(m)-om;sfx('level');
       const e=B.ents.find(x=>x.u===m);burst(cen(e)[0],cen(e)[1],30,['#ffd83c','#fff','#9dff9d'],2.6,30,-.04,2);await banner(SP[m.sp].n+' REACHED LV '+m.lv+'!',46);
       const nm=SP[m.sp].moves.find(a=>a[0]==m.lv);if(nm){await banner('LEARNED '+MV[nm[1]].n+'!',46)}}}
     await wait(10)}
+  G.party.forEach(m=>{if(m.hp>0)m.mp=Math.min(mmp(m),m.mp+Math.ceil(mmp(m)*.25))});
   B.msg='';await fade(1,14);scene=o.after||'world';B=null;parts.length=0;fxs.length=0;floats.length=0;
   if(scene=='world'){music(prevMus&&prevMus!='battle'&&prevMus!='boss'&&prevMus!='victory'?prevMus:curMap().mus)}
   G.noenc=8;for(const k in held)held[k]=0;keyq.length=0;await fade(0,14);busy--;return result}
-async function postBattle(){const m=G.party[0];if(m&&m.sp=='embermon'&&m.lv>=6&&m.hp>0)await evolve(m)}
+const EVO={embermon:{to:'blazewyrm',lv:6,lines:['EMBERMON|I FEEL... STRONGER! MY DATA IS SHINING!','EMBERMON EVOLVED INTO BLAZEWYRM!','BLAZEWYRM|LET\'S SHOW THE NULL TIDE WHAT WE\'RE MADE OF, KAI!']},
+ aquabit:{to:'marinomon',lv:8,lines:['AQUABIT|THE OCEAN... I CAN HEAR IT INSIDE MY DATA!','AQUABIT EVOLVED INTO MARINOMON!','MARINOMON|NO TIDE WILL WASH THIS WORLD AWAY. NOT WHILE I\'M HERE!']},
+ sprigmon:{to:'verdantmon',lv:8,lines:['SPRIGMON|WHOA... I\'M BLOOMING!','SPRIGMON EVOLVED INTO VERDANTMON!','VERDANTMON|FASTER THAN THE WIND THROUGH FERNWIRE! LET\'S GO, KAI!']}};
+async function postBattle(){for(const m of G.party){const e=EVO[m.sp];if(e&&m.lv>=e.lv&&m.hp>0)await evolve(m)}}
 async function gameOver(){busy++;music('sad');await fade(1,30);scene='cut';cut.draw=()=>{R(0,0,W,H,'#000');tx('DATA CORRUPTED...',128-tw('DATA CORRUPTED...')/2,100,'#ff4050')};await fade(0,10);
   await say(['...','EMBERMON|KAI... DON\'T GIVE UP. THE DAWN ISN\'T OVER YET.','A WARM LIGHT RETURNED YOU TO DAWNBIT TOWN.']);
   G.bits=Math.floor(G.bits/2);G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});G.map='town';G.x=8;G.y=5;G.dir=0;pl.mv=0;pl.fx=8;pl.fy=5;pl.fox=8;pl.foy=5;setAmb();
   await fade(1,10);scene='world';music('town');await fade(0,14);busy--}
 // ---------- evolution ----------
 const cut={draw(){}};
-async function evolve(m){busy++;music(null);const old=m.sp,nw='blazewyrm',names=SP[old].n;await fade(1,14);scene='cut';const ev={t:0};
+async function evolve(m){busy++;music(null);const old=m.sp,nw=EVO[old].to,names=SP[old].n;await fade(1,14);scene='cut';const ev={t:0};
   cut.draw=()=>{const t=ev.t;R(0,0,W,H,'#05030f');
     for(let i=0;i<40;i++){const a=i*.61+t*.03,r=((t*.8+i*17)%120);const x=128+Math.cos(a)*r*(t<200?1:1.4),y=104+Math.sin(a)*r*.7;
       if(t<210)tx(hash(i,t>>3)>.5?'1':'0',x|0,y|0,i%3?'#1fa3c8':'#ff62b8',null)}
@@ -774,7 +833,7 @@ async function evolve(m){busy++;music(null);const old=m.sp,nw='blazewyrm',names=
     if(t>=195&&t<215){R(0,0,W,H,'#fff')}if(t>=215&&t<240)R(0,0,W,H,'#ffffff'+Math.round((240-t)/25*15).toString(16)+'f');
     if(t>=240){tx(names+' EVOLVES!',128-tw(names+' EVOLVES!')/2,14,'#ffd83c');if(t>250)tx('>> '+SP[nw].n+' <<',128-tw('>> '+SP[nw].n+' <<')/2,26,'#fff')}};
   await fade(0,10);sfx('evolve');for(ev.t=0;ev.t<300;ev.t++){if(ev.t==197)sfx('flash');await frame()}
-  m.sp=nw;m.hp=mhp(m);m.mp=mmp(m);music('victory');await say(['EMBERMON|I FEEL... STRONGER! MY DATA IS SHINING!','EMBERMON EVOLVED INTO BLAZEWYRM!','BLAZEWYRM|LET\'S SHOW THE NULL TIDE WHAT WE\'RE MADE OF, KAI!']);
+  m.sp=nw;m.hp=mhp(m);m.mp=mmp(m);music('victory');await say(EVO[old].lines);
   await fade(1,12);scene='world';music(curMap().mus);await fade(0,12);busy--}
 function tick(){T++;
   updBattle();if(scene=='world')updateWorld();
@@ -812,10 +871,12 @@ function setupNpcs(){
      await say(['SPRIGMON|HEY! THAT ROCK GUARD STOLE MY SUNLEAF!','SPRIGMON|BEAT HIM, TAMER, AND I\'LL FOLLOW YOU ANYWHERE!','ROCK GUARD|GRRRMMMM... (THE GUARD LUMBERS TOWARD YOU.)']);
      const r=await battle([mkFoe('guard')],{bg:'forest',mus:'boss',boss:1,intro:'THE ROCK GUARD BLOCKS THE WAY!'});
      if(r=='lose'){await gameOver();return}
-     await say('SPRIGMON|WOOHOO! YOU\'RE STRONG! I\'M COMING WITH YOU!');G.party.push(mkMember('sprigmon',lvNew()));G.flags.sprig=1;n.hide=true;
+     await say('SPRIGMON|WOOHOO! YOU\'RE STRONG! I\'M COMING WITH YOU!');G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});sfx('heal');await say('SPRIGMON|HERE - MY SUNLEAF\'S LIGHT! (YOUR TEAM IS FULLY RESTORED.)');G.party.push(mkMember('sprigmon',lvNew()));G.flags.sprig=1;n.hide=true;
      const g=forest.npcs.find(x=>x.k=='guard');if(g)g.hide=true;sfx('level');await say('SPRIGMON JOINED YOUR TEAM!');await postBattle()}},
    {x:24,y:20,c:'rockmon',flag:'sprig',flip:true,k:'guard',dir:0,talk:async()=>say('ROCK GUARD|GRRRMMM...')}];
-  cave.npcs=[{x:30,y:6,c:'wraith',flag:'crest',aura:1,dir:0,mark:true,talk:async n=>{
+  const well=async()=>{await say('A DATA WELL HUMS SOFTLY. ITS LIGHT MENDS YOUR TEAM.');sfx('heal');G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});save()};
+  cave.npcs=[{x:3,y:25,c:'crest',dir:0,aura:1,talk:well},{x:20,y:5,c:'crest',dir:0,aura:1,mark:true,talk:async()=>{await say('A DATA WELL HUMS SOFTLY. ITS LIGHT MENDS YOUR TEAM.');sfx('heal');G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});save()}},
+   {x:30,y:6,c:'wraith',flag:'crest',aura:1,dir:0,mark:true,talk:async n=>{
     await say(['GLITCHWRAITH|...TAMER. YOUR SCENT... IT\'S FAMILIAR. LIKE THE OLD DAYS.','GLITCHWRAITH|I GUARD THE DAWN CREST FOR MY LORD. NO ONE TAKES IT.','EMBERMON|WE\'RE TAKING IT! KAI, READY?']);
     const f=mkFoe('wraith');f.half=async e=>{B.aura=1;flash('#ff62b8',10);B.shake=6;await banner('THE WRAITH SHRIEKS! STATIC TEARS THE AIR!',50);e.u.atk+=8;e.u.spd+=3;};
     const r=await battle([f],{bg:'cave',mus:'boss',boss:1,intro:'THE GLITCHWRAITH RISES FROM THE STATIC!'});
@@ -925,7 +986,7 @@ function drawEnding(){const t=en.go?++en.t:0;const rise=clamp(t/500,0,1);const c
   for(let x=0;x<256;x++){const h=168+Math.sin(x*.06+1)*4;R(x,h|0,1,60,'#2a6a3a');if(x%4==0)R(x,h-2|0,1,2,'#56c250')}
   const row=[['hero','f'],['embermon'],['aquabit'],['sprigmon'],['nullbit']];
   ctx.drawImage(SPR.hero.f[0],70,178-17-((t>>5)&1));
-  [['blazewyrm',96],['aquabit',132],['sprigmon',160],['nullbit',192]].forEach(([k,x],i)=>{const im=SPR[k];ctx.drawImage(im,x-(k=='blazewyrm'?6:0),184-im.height-((t>>4)+i&1))});
+  [...G.party.map((m,i)=>[m.sp,[96,132,160][i]]),['nullbit',192]].forEach(([k,x],i)=>{const im=SPR[k];ctx.drawImage(im,x-(im.width>26?6:0),184-im.height-((t>>4)+i&1))});
   for(let i=0;i<24;i++)R(hash(i,5)*256|0,(hash(i,6)*200+t*.3*(i%3+1))%224|0,1,1,'#ffe8a0');
   if(t>560){const y0=224-(t-560)*.35;en.credits.forEach((c,i)=>{const y=y0+i*14;if(y>-8&&y<230)tx(c,128-tw(c)/2,y|0,c[0]=='*'?'#ffd83c':'#fff')})}}
 async function ending(){busy++;await fade(1,20);scene='cut';cut.draw=drawEnding;en.t=0;en.go=0;
@@ -947,4 +1008,4 @@ boot();
 
 document.getElementById('c').addEventListener('click',()=>{document.getElementById('c').focus();auInit()});
 fit();
-</script>
+</script></body></html>
