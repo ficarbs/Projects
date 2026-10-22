@@ -195,6 +195,54 @@ const SOV=[
 ".zzzzaazzzzzmmmzzz",".zzzzzzzzzzzzzmmmz",".zzzzzzzzzaazzzzzz","zzzzzzzzzzaazzzzzz","zzzzzzzzzzzzzzzzzz","zzzzzzzzzzzzmmzzzz",
 "zzzzzzzzzzzzmmzzzz","zzzzzzzzzzzzzzzzzz"];
 const NULLB=["......zzzz","....zzzzzz","...zzzzzzz","..zzzzzzzz","..zzzzmmmz","..zzzzmwmz","..zzzzmmmz","..zzzzzzzz","..zzzzzzzz","...zzzzzzz","...zzzzzzz","....aazzzz","....aa..zz"];
+const MARINO=[
+".............cc..........",
+"............cccc.........",
+"..........bbbbbbbb.......",
+".........bbbbbbbbbb......",
+".........bbbbbbKwbbb.....",
+"........bbbbbbbbKKbbbbb..",
+"........bbbbbbbbbbbbbbbb.",
+"........bbbbKKKKKKKbbbb..",
+".........bbbbbwwwwbbbb...",
+"...c.....bbbbbbbbbbb.....",
+"..ccc...bbbbbbbbbbbbb....",
+"..cbbbbbbbbbbwwwwwbbbb...",
+".bbbbbbbbbbbwwwwwwwbbbc..",
+"bbbbbbbbbbbbwwwwwwwbbbcc.",
+"bbbbbbbbbbbbbwwwwwbbbbc..",
+".bbbbbbbbbbbbbbbbbbbbb...",
+"..bbbbbbbbbbbbbbbbbbb....",
+"...bbbbbbb...bbbbbbbb....",
+"...ccccccc...ccccccccc..."];
+const VERDANT=[
+"........G.....G..........",
+".......GGG...GGG.........",
+"......GgggggggggG........",
+".....mGgggggggggGG.......",
+".....GggggggKwggggg......",
+"....GGgggggggKKggggggg...",
+"....Gggggggggggggggggg...",
+".....GgggKKKKKKggggggw...",
+"......GggggwwgggggggG....",
+".G.....gggggggggggg......",
+"GGG...ggggggggggggggg....",
+".GGgggggggggggyyyggggG...",
+"..Gggggggggggyyyyyggggg..",
+"...gggggggggggyyyyyggggw.",
+"...ggggggggggggyyyggggg..",
+"....gggggggggggggggggg...",
+".....ggggggg...gggggggg..",
+".....gggggg.....ggggggg..",
+"....nnnnnn.....nnnnnnn..."];
+// hand-drawn overworld follower sprites (facing right)
+const MINI={
+embermon:["......oooo....",".....oooooo...",".....oooKwoo..",".....oooooooo.","......oKKKoo..","..r...ooooo...",".ryooooyyooo..","..ooooyyyooow.","...oooyyyooo..","....ooooooo...","....oo...oo...","....ww...ww..."],
+blazewyrm:[".........r..r...","........rooorr..",".......oooooo...",".......oooKwoo..",".......oooooooo.","........oKKKooo.",".rr.....ooooo...","ryyr..ooooooo...",".ryooooyyyoooow.","...ooooyyyooow..","....oooyyyooo...",".....ooooooo....",".....ooo.ooo....",".....www.www...."],
+aquabit:[".....bbbb.....","....bbbbbb....","....bbbKwbb...","....bbbbbbbb..",".b..bKKKbbb...","bbbbbbbbbb....","bbbbbbwwwbb...",".bbbbbwwwbb...","..bbbbbbbb....","..cc...ccc...."],
+marinomon:["........cc.....",".......cccc....","......bbbbbb...","......bbbKwbb..",".....bbbbbbbbbb",".....bbKKKKbbb.","..c..bbbbbbbb..",".cbbbbbbwwwbb..","bbbbbbbwwwwbbc.","bbbbbbbbwwwbbc.",".bbbbbbbbbbbb..","..ccccc..cccc.."],
+sprigmon:[".....gg.......","....GGGGg.g...","....oooooo....","...oooKwooo...","...oooooooo...","....oKKKoo....",".....gggg.....","....gggggg.g..","....gggggggg..","....ggg.ggg...","....nnn.nnn..."],
+verdantmon:["......G...G....",".....GGG.GGG...","....mGgggggG...","....GggggKwgg..","...GGgggggKKggg","....GggKKKgggg.","..G..ggggggg...",".GGgggggyyyggg.","..ggggggyyygggw","...gggggggggg..","...ggg....ggg..","...nnn....nnn.."]};
 const HUM={
  f:["...HHHHHH...","..HHHHHHHH..","..QQQQQQQQ..","..HSSSSSSH..","..HSKSSKSH..","...SSSSSS...","..CCCCCCCC..",".CCCCCCCCCC.",".SCCCCCCCCS.",".SCCCCCCCCS.","..CCCCCCCC..","..PPPPPPPP..","..PPP..PPP..","..PPP..PPP..","..nnn..nnn.."],
  b:["...HHHHHH...".slice(0,12),"..HHHHHHHH..","..QQQQQQQQ..","..HHHHHHHH..","..HHHHHHHH..","...HHHHHH...","..CCCCCCCC..",".CCCCCCCCCC.",".SCCCCCCCCS.",".SCCCCCCCCS.","..CCCCCCCC..","..PPPPPPPP..","..PPP..PPP..","..PPP..PPP..","..nnn..nnn.."],
@@ -213,7 +261,7 @@ const SPR={};
 function buildSprites(){
   SPR.embermon=spr(EMBER);SPR.blazewyrm=spr(BLAZE);SPR.aquabit=spr(AQUA);SPR.sprigmon=spr(SPRIG);
   SPR.gelbit=spr(GELBIT,{sym:1});SPR.bitbat=spr(BITBAT,{sym:1});SPR.rockmon=spr(ROCK,{sym:1});
-  SPR.sparkfox=spr(FOX);SPR.nullbit=spr(NULLB,{sym:1});SPR.wraith=spr(WRAITH,{sym:1});SPR.sovereign=spr(SOV,{sym:1});
+  SPR.sparkfox=spr(FOX);SPR.marinomon=spr(MARINO);SPR.verdantmon=spr(VERDANT);for(const k in MINI)SPR['mini_'+k]=spr(MINI[k]);SPR.nullbit=spr(NULLB,{sym:1});SPR.wraith=spr(WRAITH,{sym:1});SPR.sovereign=spr(SOV,{sym:1});
   // corrupted variants (tower)
   for(const k of ['gelbit','bitbat','rockmon','sparkfox'])SPR['n_'+k]=mk(SPR[k].width,SPR[k].height,g=>{g.drawImage(SPR[k],0,0);
     g.globalCompositeOperation='source-atop';P(g,'#b020c070',0,0,SPR[k].width,SPR[k].height);

@@ -162,7 +162,7 @@ async function battle(foes,o={}){busy++;const prevMus=AU.trackName;music(null);s
     if(!alive(1).length)result='win';else if(!alive(0).length)result='lose'}
   B.msg='';
   if(result=='win'){music('victory');await banner('VICTORY!',40);let xp=0,bits=0;foes.forEach(f=>{xp+=f.xp;bits+=f.bits});G.bits+=bits;
-    await banner('GOT '+xp+' EXP AND '+bits+' BITS!',50);if(Math.random()<.3||o.boss){G.items.potion++;await banner('FOUND A POTION!',34)}
+    await banner('GOT '+xp+' EXP AND '+bits+' BITS!',50);if(Math.random()<.12||o.boss){G.items.potion++;await banner('FOUND A POTION!',34)}
     for(const m of G.party){if(m.hp<=0)continue;m.xp+=xp;while(m.xp>=need(m)){m.xp-=need(m);const oh=mhp(m),om=mmp(m);m.lv++;m.hp+=mhp(m)-oh;m.mp+=mmp(m)-om;sfx('level');
       const e=B.ents.find(x=>x.u===m);burst(cen(e)[0],cen(e)[1],30,['#ffd83c','#fff','#9dff9d'],2.6,30,-.04,2);await banner(SP[m.sp].n+' REACHED LV '+m.lv+'!',46);
       const nm=SP[m.sp].moves.find(a=>a[0]==m.lv);if(nm){await banner('LEARNED '+MV[nm[1]].n+'!',46)}}}
@@ -171,14 +171,17 @@ async function battle(foes,o={}){busy++;const prevMus=AU.trackName;music(null);s
   B.msg='';await fade(1,14);scene=o.after||'world';B=null;parts.length=0;fxs.length=0;floats.length=0;
   if(scene=='world'){music(prevMus&&prevMus!='battle'&&prevMus!='boss'&&prevMus!='victory'?prevMus:curMap().mus)}
   G.noenc=8;for(const k in held)held[k]=0;keyq.length=0;await fade(0,14);busy--;return result}
-async function postBattle(){const m=G.party[0];if(m&&m.sp=='embermon'&&m.lv>=6&&m.hp>0)await evolve(m)}
+const EVO={embermon:{to:'blazewyrm',lv:6,lines:['EMBERMON|I FEEL... STRONGER! MY DATA IS SHINING!','EMBERMON EVOLVED INTO BLAZEWYRM!','BLAZEWYRM|LET\'S SHOW THE NULL TIDE WHAT WE\'RE MADE OF, KAI!']},
+ aquabit:{to:'marinomon',lv:8,lines:['AQUABIT|THE OCEAN... I CAN HEAR IT INSIDE MY DATA!','AQUABIT EVOLVED INTO MARINOMON!','MARINOMON|NO TIDE WILL WASH THIS WORLD AWAY. NOT WHILE I\'M HERE!']},
+ sprigmon:{to:'verdantmon',lv:8,lines:['SPRIGMON|WHOA... I\'M BLOOMING!','SPRIGMON EVOLVED INTO VERDANTMON!','VERDANTMON|FASTER THAN THE WIND THROUGH FERNWIRE! LET\'S GO, KAI!']}};
+async function postBattle(){for(const m of G.party){const e=EVO[m.sp];if(e&&m.lv>=e.lv&&m.hp>0)await evolve(m)}}
 async function gameOver(){busy++;music('sad');await fade(1,30);scene='cut';cut.draw=()=>{R(0,0,W,H,'#000');tx('DATA CORRUPTED...',128-tw('DATA CORRUPTED...')/2,100,'#ff4050')};await fade(0,10);
   await say(['...','EMBERMON|KAI... DON\'T GIVE UP. THE DAWN ISN\'T OVER YET.','A WARM LIGHT RETURNED YOU TO DAWNBIT TOWN.']);
   G.bits=Math.floor(G.bits/2);G.party.forEach(m=>{m.hp=mhp(m);m.mp=mmp(m)});G.map='town';G.x=8;G.y=5;G.dir=0;pl.mv=0;pl.fx=8;pl.fy=5;pl.fox=8;pl.foy=5;setAmb();
   await fade(1,10);scene='world';music('town');await fade(0,14);busy--}
 // ---------- evolution ----------
 const cut={draw(){}};
-async function evolve(m){busy++;music(null);const old=m.sp,nw='blazewyrm',names=SP[old].n;await fade(1,14);scene='cut';const ev={t:0};
+async function evolve(m){busy++;music(null);const old=m.sp,nw=EVO[old].to,names=SP[old].n;await fade(1,14);scene='cut';const ev={t:0};
   cut.draw=()=>{const t=ev.t;R(0,0,W,H,'#05030f');
     for(let i=0;i<40;i++){const a=i*.61+t*.03,r=((t*.8+i*17)%120);const x=128+Math.cos(a)*r*(t<200?1:1.4),y=104+Math.sin(a)*r*.7;
       if(t<210)tx(hash(i,t>>3)>.5?'1':'0',x|0,y|0,i%3?'#1fa3c8':'#ff62b8',null)}
@@ -190,7 +193,7 @@ async function evolve(m){busy++;music(null);const old=m.sp,nw='blazewyrm',names=
     if(t>=195&&t<215){R(0,0,W,H,'#fff')}if(t>=215&&t<240)R(0,0,W,H,'#ffffff'+Math.round((240-t)/25*15).toString(16)+'f');
     if(t>=240){tx(names+' EVOLVES!',128-tw(names+' EVOLVES!')/2,14,'#ffd83c');if(t>250)tx('>> '+SP[nw].n+' <<',128-tw('>> '+SP[nw].n+' <<')/2,26,'#fff')}};
   await fade(0,10);sfx('evolve');for(ev.t=0;ev.t<300;ev.t++){if(ev.t==197)sfx('flash');await frame()}
-  m.sp=nw;m.hp=mhp(m);m.mp=mmp(m);music('victory');await say(['EMBERMON|I FEEL... STRONGER! MY DATA IS SHINING!','EMBERMON EVOLVED INTO BLAZEWYRM!','BLAZEWYRM|LET\'S SHOW THE NULL TIDE WHAT WE\'RE MADE OF, KAI!']);
+  m.sp=nw;m.hp=mhp(m);m.mp=mmp(m);music('victory');await say(EVO[old].lines);
   await fade(1,12);scene='world';music(curMap().mus);await fade(0,12);busy--}
 function tick(){T++;
   updBattle();if(scene=='world')updateWorld();
